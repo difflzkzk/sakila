@@ -9,27 +9,36 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Vo.Stats;
+import service.StatsService;
 
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	
+	private StatsService statsService;
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  //loginForm
 		// Login - email , password
-		HttpSession session = request.getSession();
-		if(session.getAttribute("loginStaff")!=null) {
-			response.sendRedirect(request.getContextPath()+"/auth/IndexServlet"); //보내준다 일로   -> auth 붙이는 이유 구분하기 위해서 -> 로그인이 되어있을때만 들어올수 있게끔
-			return;
+		HttpSession session = request.getSession();  // 사용자 값이 세션됨 
+		if(session.getAttribute("loginStaff")!=null) { // loginStaff라는
+			response.sendRedirect(request.getContextPath()+"/auth/IndexServlet"); //로그인이 되었을때 index로 보내준다 
+			return; //로그인시 끝
 		}
 		
+		statsService = new StatsService(); 
+		Stats stats = statsService.getStats(); //Map<String,Object>map=statsService.getStats();
+		request.setAttribute("stats", stats); //("stats",(Stats)(map.get("stats"))); -->
+		
+		int totalCount = statsService.totalCount();
+		request.setAttribute("totalCount",totalCount);
 		
 		request.getRequestDispatcher("/WEB-INF/views/Login.jsp").forward(request, response);
 	}
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {  //loginAcion
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
 	}
 
 }
+   

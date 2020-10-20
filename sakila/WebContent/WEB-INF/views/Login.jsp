@@ -9,7 +9,7 @@
 </head>
 
 	<div>
-		오늘 접속자수 : ${stas.count} <!-- 오늘의 접속자 수 -->
+		오늘 접속자수 : ${stas.count} <!-- 오늘의 접속자 수  ${map["stats"].count} // 전체 접속자 수 : ${map["totalCount"]}-->
 	</div>
 <body>
 	<h1>로그인 폼</h1>
