@@ -13,7 +13,7 @@ public class DBUtil {
 	
 	
 	Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
-	conn.setAutoCommit(false);
+	conn.setAutoCommit(false); //최종실행
 	
 	// 메서드 - 객체명.메서드명(파라미터들);
 	

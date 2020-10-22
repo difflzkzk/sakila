@@ -52,6 +52,7 @@ public class StatsDao {
 		while(rs.next()){
 			sum = sum + rs.getInt("count");
 		}
+		rs.close();
 		stmt.executeUpdate();
 		return sum;
 	}

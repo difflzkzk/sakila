@@ -5,23 +5,34 @@
 <head>
 <meta charset="UTF-8">
 <title>Login</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+	$(document).ready(function(){
+		$('#loginBtn').click(function(){
+			$('#loginForm').submit();
+		});
+	});
+</script>
 </head>
 
 	<div>
-		오늘 접속자수 : ${stas.count} <!-- 오늘의 접속자 수  ${map["stats"].count} // 전체 접속자 수 : ${map["totalCount"]}-->
+		오늘 접속자 수 : ${stats.count}
+	</div>
+	<div>
+		총 접속자 수 : ${totalCount}
 	</div>
 <body>
 	<h1>로그인 폼</h1>
-		<form>
+	
+		<!-- <form id = "loginForm" method="post" action="${pageContext.request.contextPath}/"  id="loginBtn">-->
+		<form method="post">
 			<div>
-				<input type ="text" placeholder="ID">
+				<input type ="text" name ="email" id="email" placeholder="ID" value="aa@ajajaj.com">
 			</div>
 			<div>
-				<input type ="password" placeholder="PW">
+				<input type ="password" name ="password" id="password"  placeholder="PW" value="java1004">
 			</div>
 			<div>
-				<button type ="button">로그인</button>
+				<button type ="submit">로그인</button>
 			</div>	
 		</form>
 </body>
