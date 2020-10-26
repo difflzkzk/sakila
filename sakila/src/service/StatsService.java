@@ -25,7 +25,7 @@ public class StatsService {
 		try {
 
 			DBUtil dbUtil = new DBUtil();
-			conn = dbUtil.getConnection(); // db¿¬°á
+			conn = dbUtil.getConnection(); // dbï¿½ï¿½ï¿½ï¿½
 
 			totalCount = statsDao.totalCount(conn);
 			conn.commit();
@@ -46,28 +46,43 @@ public class StatsService {
 		return totalCount;
 	}
 	
-	// ¿À´ÃÀÇ ³¯Â¥
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥
 	public Stats getToday() {
 		Calendar today = Calendar.getInstance();
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-		String day = formater.format(today); // yyyy-MM-ddÇü½ÄÀÎ Æ÷¸ÅÅÍ(¿À´Ã³¯Â¥)¸¦ day¿¡ ³Ö¾îÁÜ
+		String day = formater.format(today); // yyyy-MM-ddï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½Ã³ï¿½Â¥)ï¿½ï¿½ dayï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½
 
 		Stats stats = new Stats();
-		stats.setDay(day); // --> DStats(¿À´Ã)
-		return stats; // --> ¿À´ÃÀ» ¹İÈ¯
+		stats.setDay(day); // --> DStats(ï¿½ï¿½ï¿½ï¿½)
+		return stats; // --> ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 	}
 
-	// ¿À´ÃÀÇ ¹æ¹®ÀÚ¸¦ Á¶È¸
-	public Stats getStats() { // public Map<String,Object> getStats()
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½æ¹®ï¿½Ú¸ï¿½ ï¿½ï¿½È¸
+	public Map<String,Object> getStats() { // public Map<String,Object> getStats()
 		statsDao = new StatsDao();
 		Connection conn = null;
-		Stats returnStats = null;
+		Map<String,Object>map = new HashMap<>();
 
 		try {
 			DBUtil dbUtil = new DBUtil();
-			conn = dbUtil.getConnection(); // db¿¬°á
+			conn = dbUtil.getConnection(); // dbì—°ê²°ë¨
 			
-			Stats returnstats = statsDao.selectDay(conn, this.getToday());
+
+			// í˜„ì¬ ë‚ ì§œë¥¼ ì´ìš©í•´ statsDaoì— ì „ë‹¬í•  íŒŒë¼ë¯¸í„° ê°ì²´ë¥¼ ë§Œë“  ë’¤
+			Stats stats = new Stats();
+			stats.setDay(this.formater());
+			System.out.println("debug: instance-variable: stats=" + stats);
+			// í˜„ì¬ ë‚ ì§œì— ëŒ€í•œ ë°©ë¬¸ì ìˆ˜ ì •ë³´ë¥¼ ê°€ì ¸ì˜´
+			Stats todayStats = statsDao.selectDay(conn, stats);
+			System.out.println("debug: instance-variable: todayStats=" + todayStats);
+
+			System.out.println("debug: message: 'Execute SQL transection...'");
+			Stats returnStats = statsDao.selectDay(conn, todayStats);
+			System.out.println("debug: instance-variable: returnStats=" + returnStats);
+			map.put("returnStats", returnStats);
+			
+			int totalCount = statsDao.totalCount(conn);
+			map.put("totalCount", totalCount);
 			conn.commit();
 
 		}catch(Exception e){
@@ -83,11 +98,11 @@ public class StatsService {
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		return returnStats; 
+		return map; 
 	}
 	
 
-	// ¹æ¹®ÀÚ ¼¼ÁÖ´Â °Í
+	// ï¿½æ¹®ï¿½ï¿½ ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½
 	public void countStats() {
 		statsDao = new StatsDao();
 		Connection conn = null;
@@ -96,10 +111,10 @@ public class StatsService {
 			
 
 			DBUtil dbUtil = new DBUtil();
-			conn = dbUtil.getConnection(); // db¿¬°á
+			conn = dbUtil.getConnection(); // dbï¿½ï¿½ï¿½ï¿½
 			
 			Stats stats = new Stats();
-			stats = statsDao.selectDay(conn, stats); // ¿À´Ã ³¯Â¥¿¡ stats°¡ ÀÖ´ÂÁö ¼¼ÁÜ
+			stats = statsDao.selectDay(conn, stats); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½ statsï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 			if (statsDao.selectDay(conn, stats) == null) {
 				statsDao.insertStats(conn, stats);
@@ -123,11 +138,11 @@ public class StatsService {
 			}
 		}
 	}
-	// yyyy-MM-dd Æ÷¸ËÀ¸·Î ¿À´Ã ³¯Â¥¸¦ Ãâ·ÂÇÏ´Â ¸Ş¼­µå
+	// yyyy-MM-dd ì˜¤ëŠ˜ë‚ ì§œë¥¼ ì¶œë ¥í•˜ëŠ” ë©”ì„œë“œì„
 		private String formater() {
-			Calendar today = Calendar.getInstance(); // ÇöÀç ³¯Â¥¸¦ Calendar °´Ã¼·Î °¡Á®¿Í¼­ today º¯¼ö¿¡ ³Ö°í
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // yyyy-MM-dd Æ÷¸Ë Çü½ÄÀ» ¸¸µç ´ÙÀ½
-			String formaterdate = dateFormat.format(today.getTime()); // today º¯¼ö¸¦ yyyy-MM-dd Æ÷¸ËÀ¸·Î º¯È¯ÇØ¼­ String¿¡ Áı¾î³ÖÀ½
+			Calendar today = Calendar.getInstance(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥ï¿½ï¿½ Calendar ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ today ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö°ï¿½
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // yyyy-MM-dd ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			String formaterdate = dateFormat.format(today.getTime()); // today ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ yyyy-MM-dd ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ø¼ï¿½ Stringï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 			return formaterdate;
 		}

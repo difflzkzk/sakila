@@ -26,7 +26,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException { // loginForm
 		System.out.println("ss");
 		// Login - email , password
-		// ¼¼¼Ç³Ö°í if ¹®(return) -> °´Ã¼
+		// ï¿½ï¿½ï¿½Ç³Ö°ï¿½ if ï¿½ï¿½(return) -> ï¿½ï¿½Ã¼
 		HttpSession session = request.getSession();
 		if (session.getAttribute("loginStaff") != null) {
 			response.sendRedirect(request.getContextPath() + "/auth/IndexServlet");
@@ -34,32 +34,32 @@ public class LoginServlet extends HttpServlet {
 		}
 		System.out.println("ss");
 
-		// ¿À´ÃÀÇ °ª
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 		statsService = new StatsService();
-		Stats stats = statsService.getStats();
-		request.setAttribute("stats", stats);
+		Map<String, Object> map = statsService.getStats();
+		request.setAttribute("map",map);
 		System.out.println("ss");
 
-		// total »ý¼º
+		// total ï¿½ï¿½ï¿½ï¿½
 		statsService = new StatsService();
 		int totalCount = statsService.gettotalCount();
 		request.setAttribute("totalCount", totalCount);
 
-		request.getRequestDispatcher("/WEB-INF/views/Login.jsp").forward(request, response); //Æ÷¿öµù
+		request.getRequestDispatcher("/WEB-INF/views/Login.jsp").forward(request, response); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
 
-	// ·Î±×ÀÎ ¾×¼Ç
+	// ï¿½Î±ï¿½ï¿½ï¿½ ï¿½×¼ï¿½
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException { // loginAction
 		
 
-		System.out.println("Debug: LoginServlet doPost ½ÇÇà");
+		System.out.println("Debug: LoginServlet doPost ï¿½ï¿½ï¿½ï¿½");
 		String email = request.getParameter("email");
-		System.out.println(email+"¼º°ø");
+		System.out.println(email+"ï¿½ï¿½ï¿½ï¿½");
 		String password = request.getParameter("password");
-		System.out.println(password+"¼º°ø");
+		System.out.println(password+"ï¿½ï¿½ï¿½ï¿½");
 		
 		staffService = new StaffService();
-		Staff staff = new Staff(); // ÆÄ¶ó¸ÞÅÍ·Î ¹Þ¾Æ¿Â request -> email password
+		Staff staff = new Staff(); // ï¿½Ä¶ï¿½ï¿½ï¿½Í·ï¿½ ï¿½Þ¾Æ¿ï¿½ request -> email password
 		
 		staff.setEmail(email);
 		staff.setPassword(password);
@@ -68,14 +68,17 @@ public class LoginServlet extends HttpServlet {
 		Staff returnStaff = staffService.getStaffBYKey(staff);
 		
 		
-		if ( returnStaff!= null) { // ·Î±×ÀÎ ¼º°ø ----- ¼¼¼Ç ´ã°í Æ÷¿öµù
+		if ( returnStaff!= null) { // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ----- ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			
 			
 			HttpSession session = request.getSession();
-			session.setAttribute("loginStaff", returnStaff); //·Î±×ÀÎ »óÅÂÀÎÁö ¾Æ´ÑÁö ÆÇ´ÜÇÏ±â À§ÇØ
-			request.getRequestDispatcher(request.getContextPath()+"/auth/IndexServlet");
-			return;
-		} 
-			response.sendRedirect(request.getContextPath() + "/LogoutServlet");
+			session.setAttribute("loginStaff", returnStaff); //ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+			
+			request.getRequestDispatcher("/WEB-INF/views/auth/index.jsp").forward(request, response);;
+			response.sendRedirect(request.getContextPath()+"/auth/IndexServlet");
+		} else
+			
+			response.sendRedirect(request.getContextPath() + "/LoginServlet");
 		}
 	}
 

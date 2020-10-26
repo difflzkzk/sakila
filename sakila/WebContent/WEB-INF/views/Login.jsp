@@ -15,10 +15,7 @@
 </head>
 
 	<div>
-		오늘 접속자 수 : ${stats.count}
-	</div>
-	<div>
-		총 접속자 수 : ${totalCount}
+		오늘 접속자 수 : ${map["returnStats"].count} / 전체 접속자 수 : ${map["totalCount"]}
 	</div>
 <body>
 	<h1>로그인 폼</h1>

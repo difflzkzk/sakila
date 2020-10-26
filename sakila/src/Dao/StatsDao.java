@@ -7,26 +7,27 @@ import Vo.Stats;
 import service.StatsQuery;
 
 public class StatsDao {
-	// rs.next()ÀÖÀ¸¸é true, ¾øÀ¸¸é false
-
+	// rs.next()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ true, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ false
+	
 	public Stats selectDay(Connection conn,Stats stats)throws Exception{
+		
+
+		//Prepared -> StatsQuery ï¿½ï¿½  SELECT_DAYï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ Resultset -> excuteQuery
+
+		//stats ì˜ ê°’ì— ê°’ì„ ë°›ì•„ ë„£ìŒ
 		Stats returnStats = null;
-
-		//Prepared -> StatsQuery ÀÇ  SELECT_DAY°ª ³Ö¾îÁÜ Resultset -> excuteQuery
-
-
-		Stats returnState =null; 
 		PreparedStatement stmt = conn.prepareStatement(StatsQuery.SELECT_STATS);
-		stmt.setString(1, stats.getDay());//¿À´Ã ³¯Â¥
-		ResultSet rs = stmt.executeQuery();//½ÇÇà
-
+		stmt.setString(1, stats.getDay());//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¥
+		ResultSet rs = stmt.executeQuery();//ï¿½ï¿½ï¿½ï¿½
+		System.out.println("stmt"+stmt);
+		
 		if(rs.next()) {
-			returnState = new Stats();
-			returnState.setDay(rs.getString("day"));
-			returnState.setCount(rs.getInt("count"));
+			returnStats = new Stats();
+			returnStats.setDay(rs.getString("day"));
+			returnStats.setCount(rs.getInt("count"));
 		}
 
-		return returnState; // 
+		return returnStats; // 
 
 	}
 	public void insertStats(Connection conn, Stats stats) throws Exception {
